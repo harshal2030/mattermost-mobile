@@ -100,10 +100,6 @@ export default function QuickActions({
                 testID={fileActionTestID}
                 {...uploadProps}
             />
-            {/* <ImageAction
-                testID={imageActionTestID}
-                {...uploadProps}
-            /> */}
             <ImageAction
                 testID={imageActionTestID}
                 {...uploadProps}

@@ -24,7 +24,6 @@
     "__DEV__": true
   },
   "rules": {
-    "linebreak-style": 0,
     "eol-last": ["error", "always"],
     "global-require": 0,
     "no-undefined": 0,
