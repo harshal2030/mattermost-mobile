@@ -28,17 +28,22 @@ const getStyle = makeStyleSheetFromTheme((theme: Theme) => ({
 
 }));
 
-const CameraType = ({onPress}: Props) => {
+export interface ImageOptions extends CameraOptions {
+    source: 'camera' | 'library';
+}
+
+const ImageType = ({onPress}: Props) => {
     const theme = useTheme();
     const isTablet = useIsTablet();
     const style = getStyle(theme);
     const intl = useIntl();
 
     const onPhoto = async () => {
-        const options: CameraOptions = {
+        const options: ImageOptions = {
             quality: 0.8,
             mediaType: 'photo',
             saveToPhotos: true,
+            source: 'camera',
         };
 
         await dismissBottomSheet();
@@ -46,10 +51,22 @@ const CameraType = ({onPress}: Props) => {
     };
 
     const onVideo = async () => {
-        const options: CameraOptions = {
+        const options: ImageOptions = {
             videoQuality: 'high',
             mediaType: 'video',
             saveToPhotos: true,
+            source: 'camera',
+        };
+
+        await dismissBottomSheet();
+        onPress(options);
+    };
+
+    const onLibrary = async () => {
+        const options: ImageOptions = {
+            mediaType: 'photo',
+            saveToPhotos: true,
+            source: 'library',
         };
 
         await dismissBottomSheet();
@@ -60,25 +77,31 @@ const CameraType = ({onPress}: Props) => {
         <View>
             {!isTablet &&
             <FormattedText
-                id='mobile.camera_type.title'
-                defaultMessage='Camera options'
+                id='mobile.image.title'
+                defaultMessage='Photos & videos'
                 style={style.title}
             />
             }
             <SlideUpPanelItem
+                icon='image-outline'
+                onPress={onLibrary}
+                testID=''
+                text={intl.formatMessage({id: 'image_type.library.option', defaultMessage: 'Choose from photo library'})}
+            />
+            <SlideUpPanelItem
                 icon='camera-outline'
                 onPress={onPhoto}
                 testID='camera_type.photo'
-                text={intl.formatMessage({id: 'camera_type.photo.option', defaultMessage: 'Capture Photo'})}
+                text={intl.formatMessage({id: 'image_type.photo.option', defaultMessage: 'Take a photo'})}
             />
             <SlideUpPanelItem
                 icon='video-outline'
                 onPress={onVideo}
                 testID='camera_type.video'
-                text={intl.formatMessage({id: 'camera_type.video.option', defaultMessage: 'Record Video'})}
+                text={intl.formatMessage({id: 'image_type.video.option', defaultMessage: 'Record a video'})}
             />
         </View>
     );
 };
 
-export default CameraType;
+export default ImageType;

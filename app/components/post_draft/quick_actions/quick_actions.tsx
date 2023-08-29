@@ -4,11 +4,12 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
-import CameraAction from './camera_quick_action';
 import FileAction from './file_quick_action';
 import ImageAction from './image_quick_action';
 import InputAction from './input_quick_action';
 import PostPriorityAction from './post_priority_action';
+
+import type CustomEmojiModel from '@typings/database/models/servers/custom_emoji';
 
 type Props = {
     testID?: string;
@@ -25,6 +26,7 @@ type Props = {
     postPriority: PostPriority;
     updatePostPriority: (postPriority: PostPriority) => void;
     focus: () => void;
+    customEmojis: CustomEmojiModel[];
 }
 
 const style = StyleSheet.create({
@@ -43,6 +45,7 @@ export default function QuickActions({
     isPostPriorityEnabled,
     canShowPostPriority,
     maxFileCount,
+    customEmojis,
     updateValue,
     addFiles,
     postPriority,
@@ -54,9 +57,9 @@ export default function QuickActions({
 
     const atInputActionTestID = `${testID}.at_input_action`;
     const slashInputActionTestID = `${testID}.slash_input_action`;
+    const emojiInputActionTestID = `${testID}.emoji_input_action`;
     const fileActionTestID = `${testID}.file_action`;
     const imageActionTestID = `${testID}.image_action`;
-    const cameraActionTestID = `${testID}.camera_action`;
     const postPriorityActionTestID = `${testID}.post_priority_action`;
 
     const uploadProps = {
@@ -86,16 +89,23 @@ export default function QuickActions({
                 updateValue={updateValue}
                 focus={focus}
             />
+            <InputAction
+                testID={emojiInputActionTestID}
+                inputType='emoji'
+                updateValue={updateValue}
+                customEmojis={customEmojis}
+                focus={focus}
+            />
             <FileAction
                 testID={fileActionTestID}
                 {...uploadProps}
             />
-            <ImageAction
+            {/* <ImageAction
                 testID={imageActionTestID}
                 {...uploadProps}
-            />
-            <CameraAction
-                testID={cameraActionTestID}
+            /> */}
+            <ImageAction
+                testID={imageActionTestID}
                 {...uploadProps}
             />
             {isPostPriorityEnabled && canShowPostPriority && (

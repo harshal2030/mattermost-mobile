@@ -2,18 +2,26 @@
 // See LICENSE.txt for license information.
 
 import React, {useCallback} from 'react';
+import {useIntl} from 'react-intl';
 
+import {Screens} from '@app/constants';
+import {openAsBottomSheet} from '@app/screens/navigation';
+import {getEmojiByName} from '@app/utils/emoji/helpers';
+import {preventDoubleTap} from '@app/utils/tap';
 import CompassIcon from '@components/compass_icon';
 import TouchableWithFeedback from '@components/touchable_with_feedback';
 import {ICON_SIZE} from '@constants/post_draft';
 import {useTheme} from '@context/theme';
 import {changeOpacity, makeStyleSheetFromTheme} from '@utils/theme';
 
+import type CustomEmojiModel from '@typings/database/models/servers/custom_emoji';
+
 type Props = {
     testID?: string;
     disabled?: boolean;
-    inputType: 'at' | 'slash';
+    inputType: 'at' | 'slash' | 'emoji';
     updateValue: React.Dispatch<React.SetStateAction<string>>;
+    customEmojis?: CustomEmojiModel[];
     focus: () => void;
 }
 
@@ -35,27 +43,65 @@ export default function InputQuickAction({
     disabled,
     inputType,
     updateValue,
+    customEmojis = [],
     focus,
 }: Props) {
     const theme = useTheme();
+    const intl = useIntl();
     const onPress = useCallback(() => {
-        updateValue((v) => {
-            if (inputType === 'at') {
-                return `${v}@`;
-            }
-            return '/';
-        });
-        focus();
+        if (inputType === 'at') {
+            updateValue((v) => `${v}@`);
+            focus();
+        } else if (inputType === 'slash') {
+            updateValue((v) => `/${v}`);
+            focus();
+        } else {
+            openEmojiPicker();
+        }
     }, [inputType]);
 
-    const actionTestID = disabled ?
-        `${testID}.disabled` :
-        testID;
+    const handleEmojiClick = useCallback((emoji: string) => {
+        let emojiDraft: string;
+
+        const emojiData = getEmojiByName(emoji, customEmojis);
+
+        if (emojiData?.image && emojiData.category !== 'custom') {
+            const codeArray: string[] = emojiData.image.split('-');
+            const code = codeArray.reduce((acc, c) => {
+                return acc + String.fromCodePoint(parseInt(c, 16));
+            }, '');
+            emojiDraft = code;
+        } else {
+            emojiDraft = `:${emoji}: `;
+        }
+
+        updateValue((v) => `${v}${emojiDraft} `);
+        focus();
+    }, [getEmojiByName]);
+
+    const openEmojiPicker = useCallback(preventDoubleTap(() => {
+        openAsBottomSheet({
+            closeButtonId: 'close-emoji-picker',
+            screen: Screens.EMOJI_PICKER,
+            theme,
+            title: intl.formatMessage({id: 'mobile.custom_status.choose_emoji', defaultMessage: 'Choose an emoji'}),
+            props: {onEmojiPress: handleEmojiClick},
+        });
+    }), [theme, intl, handleEmojiClick]);
+
+    const actionTestID = disabled ? `${testID}.disabled` : testID;
     const style = getStyleSheet(theme);
-    const iconName = inputType === 'at' ? inputType : 'slash-forward-box-outline';
-    const iconColor = disabled ?
-        changeOpacity(theme.centerChannelColor, 0.16) :
-        changeOpacity(theme.centerChannelColor, 0.64);
+    const iconColor = disabled ? changeOpacity(theme.centerChannelColor, 0.16) : changeOpacity(theme.centerChannelColor, 0.64);
+
+    let iconName: string;
+
+    if (inputType === 'at') {
+        iconName = inputType;
+    } else if (inputType === 'slash') {
+        iconName = 'slash-forward-box-outline';
+    } else {
+        iconName = 'emoticon-happy-outline';
+    }
 
     return (
         <TouchableWithFeedback
