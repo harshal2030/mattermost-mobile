@@ -127,6 +127,7 @@ function PostDraft({
             rootId={rootId}
             channelId={channelId}
             cursorPosition={cursorPosition}
+            updateCursorPosition={setCursorPosition}
             value={value}
             isSearch={isSearch}
             hasFilesAttached={Boolean(files?.length)}

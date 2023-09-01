@@ -59,6 +59,7 @@ type Props = {
     isAppsEnabled: boolean;
     nestedScrollEnabled?: boolean;
     updateValue: (v: string) => void;
+    updateCursorPosition?: (n: number) => void;
     hasFilesAttached?: boolean;
     availableSpace: SharedValue<number>;
     inPost?: boolean;
@@ -80,6 +81,7 @@ const Autocomplete = ({
     isAppsEnabled,
     nestedScrollEnabled = false,
     updateValue,
+    updateCursorPosition,
     hasFilesAttached,
     inPost = false,
     growDown = false,
@@ -151,6 +153,7 @@ const Autocomplete = ({
                     cursorPosition={cursorPosition}
                     listStyle={style.listStyle}
                     updateValue={updateValue}
+                    updateCursorPosition={updateCursorPosition}
                     onShowingChange={setShowingAtMention}
                     value={value || ''}
                     nestedScrollEnabled={nestedScrollEnabled}
@@ -177,6 +180,7 @@ const Autocomplete = ({
                         onShowingChange={setShowingEmoji}
                         value={value || ''}
                         nestedScrollEnabled={nestedScrollEnabled}
+                        updateCursorPosition={updateCursorPosition}
                         rootId={rootId}
                         hasFilesAttached={hasFilesAttached}
                         inPost={inPost}

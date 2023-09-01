@@ -207,6 +207,7 @@ type Props = {
     cursorPosition: number;
     isSearch: boolean;
     updateValue: (v: string) => void;
+    updateCursorPosition?: (n: number) => void;
     onShowingChange: (c: boolean) => void;
     value: string;
     nestedScrollEnabled: boolean;
@@ -237,6 +238,7 @@ const AtMention = ({
     isSearch,
     updateValue,
     onShowingChange,
+    updateCursorPosition,
     value,
     nestedScrollEnabled,
     useChannelMentions,
@@ -335,6 +337,7 @@ const AtMention = ({
         const newCursorPosition = completedDraft.length;
 
         if (value.length > cursorPosition) {
+            updateCursorPosition?.(completedDraft.length);
             completedDraft += value.substring(cursorPosition);
         }
 

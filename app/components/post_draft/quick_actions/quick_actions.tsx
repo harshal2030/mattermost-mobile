@@ -9,8 +9,6 @@ import ImageAction from './image_quick_action';
 import InputAction from './input_quick_action';
 import PostPriorityAction from './post_priority_action';
 
-import type CustomEmojiModel from '@typings/database/models/servers/custom_emoji';
-
 type Props = {
     testID?: string;
     canUploadFiles: boolean;
@@ -22,11 +20,12 @@ type Props = {
     // Draft Handler
     value: string;
     updateValue: (value: string) => void;
+    updateCursorPosition: (cursorPosition: number) => void;
     addFiles: (file: FileInfo[]) => void;
     postPriority: PostPriority;
     updatePostPriority: (postPriority: PostPriority) => void;
     focus: () => void;
-    customEmojis: CustomEmojiModel[];
+    cursorPosition: number;
 }
 
 const style = StyleSheet.create({
@@ -45,8 +44,9 @@ export default function QuickActions({
     isPostPriorityEnabled,
     canShowPostPriority,
     maxFileCount,
-    customEmojis,
+    cursorPosition,
     updateValue,
+    updateCursorPosition,
     addFiles,
     postPriority,
     updatePostPriority,
@@ -80,6 +80,8 @@ export default function QuickActions({
                 disabled={atDisabled}
                 inputType='at'
                 updateValue={updateValue}
+                cursorPosition={cursorPosition}
+                updateCursorPosition={updateCursorPosition}
                 focus={focus}
             />
             <InputAction
@@ -87,13 +89,16 @@ export default function QuickActions({
                 disabled={slashDisabled}
                 inputType='slash'
                 updateValue={updateValue}
+                cursorPosition={cursorPosition}
+                updateCursorPosition={updateCursorPosition}
                 focus={focus}
             />
             <InputAction
                 testID={emojiInputActionTestID}
                 inputType='emoji'
                 updateValue={updateValue}
-                customEmojis={customEmojis}
+                cursorPosition={cursorPosition}
+                updateCursorPosition={updateCursorPosition}
                 focus={focus}
             />
             <FileAction

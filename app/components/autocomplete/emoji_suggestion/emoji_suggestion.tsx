@@ -11,16 +11,14 @@ import {searchCustomEmojis} from '@actions/remote/custom_emoji';
 import {handleReactionToLatestPost} from '@actions/remote/reactions';
 import Emoji from '@components/emoji';
 import TouchableWithFeedback from '@components/touchable_with_feedback';
+import {EMOJI_REGEX_WITHOUT_PREFIX, EMOJI_REGEX, REACTION_REGEX} from '@constants/emoji';
 import {useServerUrl} from '@context/server';
 import {useTheme} from '@context/theme';
-import {getEmojiByName, getEmojis, searchEmojis} from '@utils/emoji/helpers';
+import {getEmojis, searchEmojis, getEmojiCodeAndData} from '@utils/emoji/helpers';
 import {changeOpacity, makeStyleSheetFromTheme} from '@utils/theme';
 
 import type CustomEmojiModel from '@typings/database/models/servers/custom_emoji';
 
-const EMOJI_REGEX = /(^|\s|^\+|^-)(:([^:\s]*))$/i;
-const EMOJI_REGEX_WITHOUT_PREFIX = /\B(:([^:\s]*))$/i;
-const REACTION_REGEX = /^(\+|-):([^:\s]+)$/;
 const FUSE_OPTIONS = {
     findAllMatches: true,
     ignoreLocation: true,
@@ -65,6 +63,7 @@ type Props = {
     cursorPosition: number;
     customEmojis: CustomEmojiModel[];
     updateValue: (v: string) => void;
+    updateCursorPosition?: (n: number) => void;
     onShowingChange: (c: boolean) => void;
     rootId?: string;
     value: string;
@@ -79,6 +78,7 @@ const EmojiSuggestion = ({
     customEmojis = [],
     updateValue,
     onShowingChange,
+    updateCursorPosition,
     rootId,
     value,
     nestedScrollEnabled,
@@ -136,18 +136,15 @@ const EmojiSuggestion = ({
         }
 
         const emojiPart = value.substring(0, cursorPosition);
-        const emojiData = getEmojiByName(emoji, customEmojis);
+        const {emojiCode, emojiData} = getEmojiCodeAndData(emoji, customEmojis);
         if (emojiData?.image && emojiData.category !== 'custom') {
-            const codeArray: string[] = emojiData.image.split('-');
-            const code = codeArray.reduce((acc, c) => {
-                return acc + String.fromCodePoint(parseInt(c, 16));
-            }, '');
-            completedDraft = emojiPart.replace(EMOJI_REGEX_WITHOUT_PREFIX, `${code} `);
+            completedDraft = emojiPart.replace(EMOJI_REGEX_WITHOUT_PREFIX, `${emojiCode} `);
         } else {
-            completedDraft = emojiPart.replace(EMOJI_REGEX_WITHOUT_PREFIX, `${prefix}${emoji}: `);
+            completedDraft = emojiPart.replace(EMOJI_REGEX_WITHOUT_PREFIX, `${prefix}${emojiCode}: `);
         }
 
         if (value.length > cursorPosition) {
+            updateCursorPosition?.(completedDraft.length);
             completedDraft += value.substring(cursorPosition);
         }
 

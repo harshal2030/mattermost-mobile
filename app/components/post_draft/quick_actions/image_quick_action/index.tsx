@@ -18,7 +18,7 @@ import PickerUtil from '@utils/file/file_picker';
 import {bottomSheetSnapPoint} from '@utils/helpers';
 import {changeOpacity} from '@utils/theme';
 
-import CameraType, {type ImageOptions} from './image_type';
+import ImageType, {type ImageOptions} from './image_type';
 
 import type {QuickActionAttachmentProps} from '@typings/components/post_draft_quick_action';
 
@@ -55,7 +55,7 @@ export default function ImageQuickAction({
 
     const renderContent = useCallback(() => {
         return (
-            <CameraType
+            <ImageType
                 onPress={handleButtonPress}
             />
         );

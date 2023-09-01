@@ -227,6 +227,8 @@ export default function DraftInput({
                             fileCount={files.length}
                             addFiles={addFiles}
                             updateValue={updateValue}
+                            cursorPosition={cursorPosition}
+                            updateCursorPosition={updateCursorPosition}
                             value={value}
                             postPriority={postPriority}
                             updatePostPriority={updatePostPriority}

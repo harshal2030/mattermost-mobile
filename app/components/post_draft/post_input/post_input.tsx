@@ -319,6 +319,7 @@ export default function PostInput({
             onChangeText={handleTextChange}
             onFocus={onFocus}
             onPaste={onPaste}
+            selection={{start: cursorPosition, end: cursorPosition}}
             onSelectionChange={handlePostDraftSelectionChanged}
             placeholder={intl.formatMessage(getPlaceHolder(rootId), {channelDisplayName})}
             placeholderTextColor={changeOpacity(theme.centerChannelColor, 0.5)}

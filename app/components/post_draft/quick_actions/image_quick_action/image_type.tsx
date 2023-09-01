@@ -77,8 +77,8 @@ const ImageType = ({onPress}: Props) => {
         <View>
             {!isTablet &&
             <FormattedText
-                id='mobile.image.title'
-                defaultMessage='Photos & videos'
+                id='mobile.camera_type.title'
+                defaultMessage='Camera options'
                 style={style.title}
             />
             }
@@ -86,19 +86,19 @@ const ImageType = ({onPress}: Props) => {
                 icon='image-outline'
                 onPress={onLibrary}
                 testID=''
-                text={intl.formatMessage({id: 'image_type.library.option', defaultMessage: 'Choose from photo library'})}
+                text={intl.formatMessage({id: 'mobile.file_upload.library', defaultMessage: 'Photo Library'})}
             />
             <SlideUpPanelItem
                 icon='camera-outline'
                 onPress={onPhoto}
                 testID='camera_type.photo'
-                text={intl.formatMessage({id: 'image_type.photo.option', defaultMessage: 'Take a photo'})}
+                text={intl.formatMessage({id: 'camera_type.photo.option', defaultMessage: 'Capture photo'})}
             />
             <SlideUpPanelItem
                 icon='video-outline'
                 onPress={onVideo}
                 testID='camera_type.video'
-                text={intl.formatMessage({id: 'image_type.video.option', defaultMessage: 'Record a video'})}
+                text={intl.formatMessage({id: 'camera_type.video.option', defaultMessage: 'Record video'})}
             />
         </View>
     );

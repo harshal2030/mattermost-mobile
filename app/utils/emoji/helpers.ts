@@ -1,6 +1,5 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-
 import emojiRegex from 'emoji-regex';
 
 import SystemModel from '@database/models/server/system';
@@ -369,4 +368,21 @@ export const searchEmojis = (fuse: Fuse<string>, searchTerm: string) => {
     }
 
     return [];
+};
+
+export const getEmojiCodeAndData = (emoji: string, customEmojis: CustomEmojiModel[] = []) => {
+    let emojiCode: string;
+
+    const emojiData = getEmojiByName(emoji, customEmojis);
+    if (emojiData?.image && emojiData.category !== 'custom') {
+        const codeArray: string[] = emojiData.image.split('-');
+        const code = codeArray.reduce((acc, c) => {
+            return acc + String.fromCodePoint(parseInt(c, 16));
+        }, '');
+        emojiCode = code;
+    } else {
+        emojiCode = emoji;
+    }
+
+    return {emojiCode, emojiData};
 };

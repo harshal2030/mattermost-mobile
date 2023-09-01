@@ -5,6 +5,10 @@ export const MAX_ALLOWED_REACTIONS = 40;
 export const SORT_BY_NAME = 'name';
 export const EMOJIS_PER_PAGE = 200;
 
+export const EMOJI_REGEX = /(^|\s|^\+|^-)(:([^:\s]*))$/i;
+export const EMOJI_REGEX_WITHOUT_PREFIX = /\B(:([^:\s]*))$/i;
+export const REACTION_REGEX = /^(\+|-):([^:\s]+)$/;
+
 // reEmoji matches an emoji (eg. :taco:) at the start of a string.
 export const reEmoji = /^:([a-z0-9_\-+]+):\B/i;
 

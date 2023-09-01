@@ -6,7 +6,7 @@ import {useIntl} from 'react-intl';
 
 import {Screens} from '@app/constants';
 import {openAsBottomSheet} from '@app/screens/navigation';
-import {getEmojiByName} from '@app/utils/emoji/helpers';
+import {getEmojiCodeAndData} from '@app/utils/emoji/helpers';
 import {preventDoubleTap} from '@app/utils/tap';
 import CompassIcon from '@components/compass_icon';
 import TouchableWithFeedback from '@components/touchable_with_feedback';
@@ -14,15 +14,14 @@ import {ICON_SIZE} from '@constants/post_draft';
 import {useTheme} from '@context/theme';
 import {changeOpacity, makeStyleSheetFromTheme} from '@utils/theme';
 
-import type CustomEmojiModel from '@typings/database/models/servers/custom_emoji';
-
 type Props = {
     testID?: string;
     disabled?: boolean;
     inputType: 'at' | 'slash' | 'emoji';
     updateValue: React.Dispatch<React.SetStateAction<string>>;
-    customEmojis?: CustomEmojiModel[];
+    updateCursorPosition: React.Dispatch<React.SetStateAction<number>>;
     focus: () => void;
+    cursorPosition: number;
 }
 
 const getStyleSheet = makeStyleSheetFromTheme((theme) => {
@@ -42,15 +41,24 @@ export default function InputQuickAction({
     testID,
     disabled,
     inputType,
+    cursorPosition,
     updateValue,
-    customEmojis = [],
+    updateCursorPosition,
     focus,
 }: Props) {
     const theme = useTheme();
     const intl = useIntl();
     const onPress = useCallback(() => {
         if (inputType === 'at') {
-            updateValue((v) => `${v}@`);
+            updateValue((v) => {
+                const part1 = v.substring(0, cursorPosition) + '@';
+                const part2 = v.substring(cursorPosition);
+
+                const value = part1 + part2;
+
+                updateCursorPosition(part1.length);
+                return value;
+            });
             focus();
         } else if (inputType === 'slash') {
             updateValue((v) => `/${v}`);
@@ -58,26 +66,29 @@ export default function InputQuickAction({
         } else {
             openEmojiPicker();
         }
-    }, [inputType]);
+    }, [inputType, cursorPosition, updateValue, updateCursorPosition]);
 
     const handleEmojiClick = useCallback((emoji: string) => {
-        let emojiDraft: string;
+        updateValue((v) => {
+            let emojiDraft: string;
+            const {emojiCode, emojiData} = getEmojiCodeAndData(emoji, []);
 
-        const emojiData = getEmojiByName(emoji, customEmojis);
+            if (emojiData?.image && emojiData.category !== 'custom') {
+                emojiDraft = emojiCode;
+            } else {
+                emojiDraft = `:${emojiCode}:`;
+            }
 
-        if (emojiData?.image && emojiData.category !== 'custom') {
-            const codeArray: string[] = emojiData.image.split('-');
-            const code = codeArray.reduce((acc, c) => {
-                return acc + String.fromCodePoint(parseInt(c, 16));
-            }, '');
-            emojiDraft = code;
-        } else {
-            emojiDraft = `:${emoji}: `;
-        }
+            const part1 = v.substring(0, cursorPosition) + `${emojiDraft} `;
+            const part2 = v.substring(cursorPosition);
 
-        updateValue((v) => `${v}${emojiDraft} `);
+            const value = part1 + part2;
+
+            updateCursorPosition(part1.length);
+            return value;
+        });
         focus();
-    }, [getEmojiByName]);
+    }, [cursorPosition, updateValue, updateCursorPosition]);
 
     const openEmojiPicker = useCallback(preventDoubleTap(() => {
         openAsBottomSheet({
