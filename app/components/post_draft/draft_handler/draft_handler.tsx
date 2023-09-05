@@ -21,7 +21,8 @@ type Props = {
     maxFileCount: number;
     maxFileSize: number;
     canUploadFiles: boolean;
-    updateCursorPosition: React.Dispatch<React.SetStateAction<number>>;
+    canUpdateCursorPosition: boolean;
+    updateCursorPosition: (cursorPosition: number, canUpdatePosition?: boolean) => void;
     updatePostInputTop: (top: number) => void;
     updateValue: React.Dispatch<React.SetStateAction<string>>;
     value: string;
@@ -49,6 +50,7 @@ export default function DraftHandler(props: Props) {
         updateCursorPosition,
         updatePostInputTop,
         updateValue,
+        canUpdateCursorPosition,
         value,
         setIsFocused,
     } = props;
@@ -145,6 +147,7 @@ export default function DraftHandler(props: Props) {
             files={files || emptyFileList}
             clearDraft={clearDraft}
             addFiles={addFiles}
+            canUpdateCursorPosition={canUpdateCursorPosition}
             uploadFileError={uploadError}
             updateCursorPosition={updateCursorPosition}
             updatePostInputTop={updatePostInputTop}

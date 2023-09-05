@@ -61,6 +61,7 @@ function PostDraft({
     const [cursorPosition, setCursorPosition] = useState(message.length);
     const [postInputTop, setPostInputTop] = useState(0);
     const [isFocused, setIsFocused] = useState(false);
+    const [canUpdateCursorPosition, setCanUpdateCursorPosition] = useState(false);
     const isTablet = useIsTablet();
     const keyboardHeight = useKeyboardHeight(keyboardTracker);
     const insets = useSafeAreaInsets();
@@ -82,6 +83,16 @@ function PostDraft({
     const autocompleteAvailableSpace = containerHeight - autocompletePosition - (isChannelScreen ? headerHeight : 0);
 
     const [animatedAutocompletePosition, animatedAutocompleteAvailableSpace] = useAutocompleteDefaultAnimatedValues(autocompletePosition, autocompleteAvailableSpace);
+
+    const updateDraftCursorPosition = (newCursorPosition: number, canUpdatePosition = false) => {
+        setCanUpdateCursorPosition(canUpdatePosition);
+        setCursorPosition(newCursorPosition);
+    };
+
+    const updateAutocompleteCursorPosition = (newCursorPosition: number) => {
+        setCanUpdateCursorPosition(true);
+        setCursorPosition(newCursorPosition);
+    };
 
     if (channelIsArchived || deactivatedChannel) {
         const archivedTestID = `${testID}.archived`;
@@ -111,8 +122,9 @@ function PostDraft({
             cursorPosition={cursorPosition}
             files={files}
             rootId={rootId}
+            canUpdateCursorPosition={canUpdateCursorPosition}
             canShowPostPriority={canShowPostPriority}
-            updateCursorPosition={setCursorPosition}
+            updateCursorPosition={updateDraftCursorPosition}
             updatePostInputTop={setPostInputTop}
             updateValue={setValue}
             value={value}
@@ -127,7 +139,7 @@ function PostDraft({
             rootId={rootId}
             channelId={channelId}
             cursorPosition={cursorPosition}
-            updateCursorPosition={setCursorPosition}
+            updateCursorPosition={updateAutocompleteCursorPosition}
             value={value}
             isSearch={isSearch}
             hasFilesAttached={Boolean(files?.length)}

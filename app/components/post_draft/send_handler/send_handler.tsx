@@ -49,9 +49,10 @@ type Props = {
     // DRAFT Handler
     value: string;
     files: FileInfo[];
+    canUpdateCursorPosition: boolean;
     clearDraft: () => void;
     updateValue: React.Dispatch<React.SetStateAction<string>>;
-    updateCursorPosition: React.Dispatch<React.SetStateAction<number>>;
+    updateCursorPosition: (position: number, canUpdatePosition: boolean) => void;
     updatePostInputTop: (top: number) => void;
     addFiles: (file: FileInfo[]) => void;
     uploadFileError: React.ReactNode;
@@ -83,6 +84,7 @@ export default function SendHandler({
     userIsOutOfOffice,
     customEmojis,
     value,
+    canUpdateCursorPosition,
     clearDraft,
     updateValue,
     addFiles,
@@ -279,6 +281,7 @@ export default function SendHandler({
             updateCursorPosition={updateCursorPosition}
             value={value}
             files={files}
+            canUpdateCursorPosition={canUpdateCursorPosition}
             updateValue={updateValue}
             addFiles={addFiles}
             uploadFileError={uploadFileError}

@@ -36,6 +36,7 @@ type Props = {
     enableUserTypingMessage: boolean;
     membersInChannel: number;
     value: string;
+    canUpdateCursorPosition: boolean;
     updateValue: React.Dispatch<React.SetStateAction<string>>;
     addFiles: (files: ExtractedFileInfo[]) => void;
     cursorPosition: number;
@@ -107,6 +108,7 @@ export default function PostInput({
     enableUserTypingMessage,
     membersInChannel,
     value,
+    canUpdateCursorPosition,
     updateValue,
     addFiles,
     cursorPosition,
@@ -319,7 +321,7 @@ export default function PostInput({
             onChangeText={handleTextChange}
             onFocus={onFocus}
             onPaste={onPaste}
-            selection={{start: cursorPosition, end: cursorPosition}}
+            selection={canUpdateCursorPosition ? {start: cursorPosition, end: cursorPosition} : undefined}
             onSelectionChange={handlePostDraftSelectionChanged}
             placeholder={intl.formatMessage(getPlaceHolder(rootId), {channelDisplayName})}
             placeholderTextColor={changeOpacity(theme.centerChannelColor, 0.5)}

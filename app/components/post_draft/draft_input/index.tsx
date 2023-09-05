@@ -39,7 +39,7 @@ type Props = {
     persistentNotificationMaxRecipients: number;
 
     // Cursor Position Handler
-    updateCursorPosition: React.Dispatch<React.SetStateAction<number>>;
+    updateCursorPosition: (cursorPosition: number, canUpdatePosition?: boolean) => void;
     cursorPosition: number;
 
     // Send Handler
@@ -49,6 +49,7 @@ type Props = {
 
     // Draft Handler
     files: FileInfo[];
+    canUpdateCursorPosition: boolean;
     value: string;
     uploadFileError: React.ReactNode;
     updateValue: React.Dispatch<React.SetStateAction<string>>;
@@ -117,6 +118,7 @@ export default function DraftInput({
     uploadFileError,
     sendMessage,
     canSend,
+    canUpdateCursorPosition,
     updateValue,
     addFiles,
     updateCursorPosition,
@@ -172,6 +174,10 @@ export default function DraftInput({
 
     const sendActionDisabled = !canSend || noMentionsError;
 
+    const updateQuickActionCursorPosition = useCallback((newCursorPosition: number) => {
+        updateCursorPosition(newCursorPosition, true);
+    }, []);
+
     return (
         <>
             <Typing
@@ -209,6 +215,7 @@ export default function DraftInput({
                         updateCursorPosition={updateCursorPosition}
                         updateValue={updateValue}
                         value={value}
+                        canUpdateCursorPosition={canUpdateCursorPosition}
                         addFiles={addFiles}
                         sendMessage={handleSendMessage}
                         inputRef={inputRef}
@@ -228,7 +235,7 @@ export default function DraftInput({
                             addFiles={addFiles}
                             updateValue={updateValue}
                             cursorPosition={cursorPosition}
-                            updateCursorPosition={updateCursorPosition}
+                            updateCursorPosition={updateQuickActionCursorPosition}
                             value={value}
                             postPriority={postPriority}
                             updatePostPriority={updatePostPriority}

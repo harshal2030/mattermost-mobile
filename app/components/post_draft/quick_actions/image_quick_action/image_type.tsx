@@ -92,13 +92,13 @@ const ImageType = ({onPress}: Props) => {
                 icon='camera-outline'
                 onPress={onPhoto}
                 testID='camera_type.photo'
-                text={intl.formatMessage({id: 'camera_type.photo.option', defaultMessage: 'Capture photo'})}
+                text={intl.formatMessage({id: 'camera_type.photo.option', defaultMessage: 'Capture Photo'})}
             />
             <SlideUpPanelItem
                 icon='video-outline'
                 onPress={onVideo}
                 testID='camera_type.video'
-                text={intl.formatMessage({id: 'camera_type.video.option', defaultMessage: 'Record video'})}
+                text={intl.formatMessage({id: 'camera_type.video.option', defaultMessage: 'Record Video'})}
             />
         </View>
     );
