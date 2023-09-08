@@ -14,7 +14,7 @@ import TouchableWithFeedback from '@components/touchable_with_feedback';
 import {EMOJI_REGEX_WITHOUT_PREFIX, EMOJI_REGEX, REACTION_REGEX} from '@constants/emoji';
 import {useServerUrl} from '@context/server';
 import {useTheme} from '@context/theme';
-import {getEmojis, searchEmojis, getEmojiCodeAndData} from '@utils/emoji/helpers';
+import {getEmojis, searchEmojis, getEmojiCode, getEmojiByName} from '@utils/emoji/helpers';
 import {changeOpacity, makeStyleSheetFromTheme} from '@utils/theme';
 
 import type CustomEmojiModel from '@typings/database/models/servers/custom_emoji';
@@ -127,21 +127,14 @@ const EmojiSuggestion = ({
             }
         }
 
-        // We are going to set a double : on iOS to prevent the auto correct from taking over and replacing it
-        // with the wrong value, this is a hack but I could not found another way to solve it
         let completedDraft: string;
-        let prefix = ':';
-        if (Platform.OS === 'ios') {
-            prefix = '::';
-        }
+        const isIOS = Platform.OS === 'ios';
 
         const emojiPart = value.substring(0, cursorPosition);
-        const {emojiCode, emojiData} = getEmojiCodeAndData(emoji, customEmojis);
-        if (emojiData?.image && emojiData.category !== 'custom') {
-            completedDraft = emojiPart.replace(EMOJI_REGEX_WITHOUT_PREFIX, `${emojiCode} `);
-        } else {
-            completedDraft = emojiPart.replace(EMOJI_REGEX_WITHOUT_PREFIX, `${prefix}${emojiCode}: `);
-        }
+        const emojiCode = getEmojiCode(emoji, customEmojis, isIOS);
+        const emojiData = getEmojiByName(emoji, customEmojis);
+
+        completedDraft = emojiPart.replace(EMOJI_REGEX_WITHOUT_PREFIX, `${emojiCode} `);
 
         if (value.length > cursorPosition) {
             updateCursorPosition?.(completedDraft.length);

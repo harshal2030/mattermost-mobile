@@ -370,8 +370,12 @@ export const searchEmojis = (fuse: Fuse<string>, searchTerm: string) => {
     return [];
 };
 
-export const getEmojiCodeAndData = (emoji: string, customEmojis: CustomEmojiModel[] = []) => {
+export const getEmojiCode = (emoji: string, customEmojis: CustomEmojiModel[] = [], ios = false) => {
     let emojiCode: string;
+
+    // We are going to set a double : on iOS to prevent the auto correct from taking over and replacing it
+    // with the wrong value, this is a hack but I could not found another way to solve it
+    const prefix = ios ? '::' : ':';
 
     const emojiData = getEmojiByName(emoji, customEmojis);
     if (emojiData?.image && emojiData.category !== 'custom') {
@@ -381,8 +385,8 @@ export const getEmojiCodeAndData = (emoji: string, customEmojis: CustomEmojiMode
         }, '');
         emojiCode = code;
     } else {
-        emojiCode = emoji;
+        emojiCode = `${prefix}${emoji}:`;
     }
 
-    return {emojiCode, emojiData};
+    return emojiCode;
 };

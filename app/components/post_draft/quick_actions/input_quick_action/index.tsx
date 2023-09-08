@@ -6,7 +6,7 @@ import {useIntl} from 'react-intl';
 
 import {Screens} from '@app/constants';
 import {openAsBottomSheet} from '@app/screens/navigation';
-import {getEmojiCodeAndData} from '@app/utils/emoji/helpers';
+import {getEmojiCode} from '@app/utils/emoji/helpers';
 import {preventDoubleTap} from '@app/utils/tap';
 import CompassIcon from '@components/compass_icon';
 import TouchableWithFeedback from '@components/touchable_with_feedback';
@@ -70,16 +70,9 @@ export default function InputQuickAction({
 
     const handleEmojiClick = useCallback((emoji: string) => {
         updateValue((v) => {
-            let emojiDraft: string;
-            const {emojiCode, emojiData} = getEmojiCodeAndData(emoji, []);
+            const emojiCode = getEmojiCode(emoji, []);
 
-            if (emojiData?.image && emojiData.category !== 'custom') {
-                emojiDraft = emojiCode;
-            } else {
-                emojiDraft = `:${emojiCode}:`;
-            }
-
-            const part1 = v.substring(0, cursorPosition) + `${emojiDraft} `;
+            const part1 = v.substring(0, cursorPosition) + `${emojiCode} `;
             const part2 = v.substring(cursorPosition);
 
             const value = part1 + part2;
