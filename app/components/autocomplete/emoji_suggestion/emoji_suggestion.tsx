@@ -128,10 +128,9 @@ const EmojiSuggestion = ({
         }
 
         let completedDraft: string;
-        const isIOS = Platform.OS === 'ios';
 
         const emojiPart = value.substring(0, cursorPosition);
-        const emojiCode = getEmojiCode(emoji, customEmojis, isIOS);
+        const emojiCode = getEmojiCode(emoji, customEmojis);
         const emojiData = getEmojiByName(emoji, customEmojis);
 
         completedDraft = emojiPart.replace(EMOJI_REGEX_WITHOUT_PREFIX, `${emojiCode} `);

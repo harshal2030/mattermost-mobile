@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import emojiRegex from 'emoji-regex';
+import {Platform} from 'react-native';
 
 import SystemModel from '@database/models/server/system';
 
@@ -370,12 +371,12 @@ export const searchEmojis = (fuse: Fuse<string>, searchTerm: string) => {
     return [];
 };
 
-export const getEmojiCode = (emoji: string, customEmojis: CustomEmojiModel[] = [], ios = false) => {
+export const getEmojiCode = (emoji: string, customEmojis: CustomEmojiModel[] = []) => {
     let emojiCode: string;
 
     // We are going to set a double : on iOS to prevent the auto correct from taking over and replacing it
     // with the wrong value, this is a hack but I could not found another way to solve it
-    const prefix = ios ? '::' : ':';
+    const prefix = Platform.OS === 'ios' ? '::' : ':';
 
     const emojiData = getEmojiByName(emoji, customEmojis);
     if (emojiData?.image && emojiData.category !== 'custom') {

@@ -16,7 +16,7 @@ import {typography} from '@utils/typography';
 import type {CameraOptions} from 'react-native-image-picker';
 
 type Props = {
-    onPress: (options: CameraOptions) => void;
+    onPress: (options: CameraOptions | {source: 'camera' | 'library'}) => void;
 }
 
 const getStyle = makeStyleSheetFromTheme((theme: Theme) => ({
@@ -63,11 +63,9 @@ const ImageType = ({onPress}: Props) => {
     };
 
     const onLibrary = async () => {
-        const options: ImageOptions = {
-            mediaType: 'photo',
-            saveToPhotos: true,
+        const options = {
             source: 'library',
-        };
+        } as const;
 
         await dismissBottomSheet();
         onPress(options);
