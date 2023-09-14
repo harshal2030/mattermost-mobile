@@ -83,7 +83,7 @@ const ImageType = ({onPress}: Props) => {
             <SlideUpPanelItem
                 icon='image-outline'
                 onPress={onLibrary}
-                testID=''
+                testID='camera_type.library'
                 text={intl.formatMessage({id: 'mobile.file_upload.library', defaultMessage: 'Photo Library'})}
             />
             <SlideUpPanelItem
