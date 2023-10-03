@@ -81,19 +81,19 @@ const ImageType = ({onPress}: Props) => {
             />
             }
             <SlideUpPanelItem
-                icon='image-outline'
+                leftIcon='image-outline'
                 onPress={onLibrary}
                 testID='camera_type.library'
                 text={intl.formatMessage({id: 'mobile.file_upload.library', defaultMessage: 'Photo Library'})}
             />
             <SlideUpPanelItem
-                icon='camera-outline'
+                leftIcon='camera-outline'
                 onPress={onPhoto}
                 testID='camera_type.photo'
                 text={intl.formatMessage({id: 'camera_type.photo.option', defaultMessage: 'Capture Photo'})}
             />
             <SlideUpPanelItem
-                icon='video-outline'
+                leftIcon='video-outline'
                 onPress={onVideo}
                 testID='camera_type.video'
                 text={intl.formatMessage({id: 'camera_type.video.option', defaultMessage: 'Record Video'})}
